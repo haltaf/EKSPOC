@@ -11,11 +11,11 @@ pipeline {
     - KUBE_CONFIG (kind: Secret text)
     
     */
-    GIT_REPO =                       "https://github.com/howie-howerton/jenkins-flask-tutorial.git"
-    DOCKER_IMAGE_NAME =              "flask-docker"
-    CONTAINER_REGISTRY =             "756757677343.dkr.ecr.us-east-1.amazonaws.com"
+    GIT_REPO =                       "https://github.com/haltaf/EKSPOC.git"
+    DOCKER_IMAGE_NAME =              "ekspoc"
+    CONTAINER_REGISTRY =             "376682452203.dkr.ecr.eu-west-1.amazonaws.com"
     CONTAINER_REGISTRY_CREDENTIALS = "ecr-credentials"
-    SMART_CHECK_HOSTNAME =           "internal-a5a855c9ada3e11e9994102b80a60968-1447727597.us-east-1.elb.amazonaws.com"
+    SMART_CHECK_HOSTNAME =           "internal-adbe6e2acda2611e9b9f90a22f0b3998-896642001.eu-west-1.elb.amazonaws.com"
     SMART_CHECK_CREDENTIALS =        "smart-check-jenkins-user"
     AWS_ECR_READ_CREDENTIALS =       "aws-ecr-read-credentials"
     //KUBE_CONFIG =                    "kubeconfig"
@@ -41,7 +41,7 @@ pipeline {
     stage("Stage Image") {
       steps{
         script {
-          docker.withRegistry('https://$CONTAINER_REGISTRY', 'ecr:us-east-1:ecr-credentials' ) {
+          docker.withRegistry('https://$CONTAINER_REGISTRY', 'ecr:eu-west-1:ecr-credentials' ) {
             dockerImage.push()
           }
         }
@@ -64,7 +64,7 @@ pipeline {
                     smartcheckCredentialsId: SMART_CHECK_CREDENTIALS,
                     imagePullAuth: new groovy.json.JsonBuilder([
                         aws: [ 
-                            region: "us-east-1", 
+                            region: "eu-west-1", 
                             accessKeyID: ACCESS_KEY_ID, 
                             secretAccessKey: SECRET_ACCESS_KEY
                         ]
