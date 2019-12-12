@@ -33,7 +33,18 @@ pipeline {
           dockerImage = docker.build('$DOCKER_IMAGE_NAME:$BUILD_NUMBER')
         }
       }
+    } 
+    stage('Scan') {
+      compliancePolicy: 'critical',
+      dockerAddress: 'unix:///var/run/docker.sock',
+      gracePeriodDays: 0,
+      ignoreImageBuildTime: true,
+      image: 'dev/ubun2:test',
+      key: '',
+      logLevel: 'true',
+      policy: 'warn',
+      requirePackageUpdate: false,
+      timeout: 10
     }
-
  }
 }
