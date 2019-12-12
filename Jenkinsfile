@@ -34,20 +34,6 @@ pipeline {
         }
       }
     }
-    stage('Scan') {
-      twistlockScan ca: '',
-      cert: '',
-      compliancePolicy: 'critical',
-      dockerAddress: 'unix:///var/run/docker.sock',
-      gracePeriodDays: 0,
-      ignoreImageBuildTime: true,
-      image: 'dev/ubun2:test',
-      key: '',
-      logLevel: 'true',
-      policy: 'warn',
-      requirePackageUpdate: false,
-      timeout: 10
-    }
 
  }
 }
