@@ -34,21 +34,5 @@ pipeline {
         }
       }
     }
-    stage ('Twistlock scan') { 
-    steps{
-    twistlockScan ca: '',
-                    cert: '',
-                    compliancePolicy: 'critical',
-                    dockerAddress: 'unix:///var/run/docker.sock',
-                    gracePeriodDays: 0,
-                    ignoreImageBuildTime: true,
-                    image: '$DOCKER_IMAGE_NAME',
-                    key: '',
-                    logLevel: 'true',
-                    policy: 'warn',
-                    requirePackageUpdate: false,
-                    timeout: 10
-    }
-}
  }
 }
