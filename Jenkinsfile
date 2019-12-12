@@ -34,16 +34,20 @@ pipeline {
         }
       }
     }
- stage("Stage Image") {
-      steps{
-        script {
-          docker.withRegistry('https://$CONTAINER_REGISTRY', 'ecr:eu-west-1:ecr-credentials' ) {
-            dockerImage.push()
-          }
-        }
-      }
+stage ('Twistlock scan') { 
+        twistlockScan ca: '',
+                    cert: '',
+                    compliancePolicy: 'critical',
+                    dockerAddress: 'unix:///var/run/docker.sock',
+                    gracePeriodDays: 0,
+                    ignoreImageBuildTime: true,
+                    image: '$DOCKER_IMAGE_NAME',
+                    key: '',
+                    logLevel: 'true',
+                    policy: 'warn',
+                    requirePackageUpdate: false,
+                    timeout: 10
     }
-
 
  }
 }
