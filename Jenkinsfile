@@ -14,12 +14,9 @@ pipeline {
     GIT_REPO =                       "https://github.com/haltaf/EKSPOC.git"
     DOCKER_IMAGE_NAME =              "ekspoc"
     CONTAINER_REGISTRY =             "376682452203.dkr.ecr.eu-west-1.amazonaws.com"
-    CONTAINER_REGISTRY_CREDENTIALS = "ecr-credentials"
+    CONTAINER_REGISTRY_CREDENTIALS = "AWS"
     SMART_CHECK_HOSTNAME =           "internal-adbe6e2acda2611e9b9f90a22f0b3998-896642001.eu-west-1.elb.amazonaws.com"
     SMART_CHECK_CREDENTIALS =        "smart-check-jenkins-user"
-    AWS_ECR_READ_CREDENTIALS =       "aws-ecr-read-credentials"
-    //KUBE_CONFIG =                    "kubeconfig"
-   // KUBE_YML_FILE_IN_GIT_REPO =      "flask-docker-kube.yml"
   }
 
   agent  any
@@ -48,62 +45,4 @@ pipeline {
       }
     }
 
-    stage("Smart Check Scan") {
-        steps {
-            withCredentials([
-                usernamePassword([
-                    credentialsId: AWS_ECR_READ_CREDENTIALS,
-                    usernameVariable: "ACCESS_KEY_ID",
-                    passwordVariable: "SECRET_ACCESS_KEY",
-                ])             
-            ]){            
-                smartcheckScan([
-                    imageName: "$CONTAINER_REGISTRY/$DOCKER_IMAGE_NAME:$BUILD_NUMBER",
-                    smartcheckHost: "$SMART_CHECK_HOSTNAME",
-                    insecureSkipTLSVerify: true,
-                    smartcheckCredentialsId: SMART_CHECK_CREDENTIALS,
-                    imagePullAuth: new groovy.json.JsonBuilder([
-                        aws: [ 
-                            region: "eu-west-1", 
-                            accessKeyID: ACCESS_KEY_ID, 
-                            secretAccessKey: SECRET_ACCESS_KEY
-                        ]
-                    ]).toString(),
-                    findingsThreshold: new groovy.json.JsonBuilder([
-                        malware: 0,
-                        vulnerabilities: [
-                            defcon1: 0,
-                            critical: 0,
-                            high: 0,
-                        ],
-                        contents: [
-                            defcon1: 0,
-                            critical: 0,
-                            high: 3,
-                        ],
-                        checklists: [
-                            defcon1: 0,
-                            critical: 0,
-                            high: 0,
-                        ],
-                    ]).toString(),
-                ])
-              }
-            }
-        }
-        
-
-    stage ("Deploy to Cluster") {
-      steps{
-        echo "Deploying to Cluster..."
-        //input 'Deploy to Kubernetes?'
-        //milestone(1)
-        //kubernetesDeploy(
-         //   kubeconfigId: KUBE_CONFIG,
-         //   configs: KUBE_YML_FILE_IN_GIT_REPO,
-         //   enableConfigSubstitution: true
-        //)
-      }
-    }
-  }
 }
