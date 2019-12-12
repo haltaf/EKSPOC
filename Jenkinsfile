@@ -34,8 +34,8 @@ pipeline {
         }
       }
     }
-stage('Scan') {
-    twistlockScan ca: '',
+    stage('Scan') {
+      twistlockScan ca: '',
       cert: '',
       compliancePolicy: 'critical',
       dockerAddress: 'unix:///var/run/docker.sock',
